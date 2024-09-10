@@ -1,4 +1,4 @@
-// Array para definir que card/question de Metabase seran cargadas
+// Array to define which Metabase card/question should be loaded
 var menuItems = [
   { sheetName: 'Sheet1', cardId: '181' },
   { sheetName: 'Sheet2', cardId: '240' }
@@ -40,6 +40,7 @@ function runHardcodedSheetAndCard(cardId, sheetName) {
   }
 }
 
+// Function to show input form in a popup
 function showInputForm() {
   // Get the HTML content from the library
   var htmlContent = MetabaseGoogleSheetConnector.getHtmlForm();
@@ -50,6 +51,16 @@ function showInputForm() {
       .setHeight(300);
   
   SpreadsheetApp.getUi().showModalDialog(htmlOutput, 'Enter Data');
+}
+
+// Function to process the input from the HTML form
+function processInput(sheetName, cardId) {
+  try {
+    MetabaseGoogleSheetConnector.fetchDataAndFillSheet(sheetName, cardId);
+    SpreadsheetApp.getUi().alert('Data successfully fetched and filled in the sheet: ' + sheetName);
+  } catch (error) {
+    SpreadsheetApp.getUi().alert('Error: ' + error.message);
+  }
 }
 
 // Template function for time-based triggers (with hardcoded sheetName and cardId)
