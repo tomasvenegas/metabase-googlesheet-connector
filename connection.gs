@@ -1,7 +1,7 @@
 // Array to define which Metabase card/question should be loaded
 var menuItems = [
-  { sheetName: 'Sheet1', cardId: '181' },
-  { sheetName: 'Sheet2', cardId: '240' }
+  { sheetName: 'Sheet1', cardId: '250' },
+  { sheetName: 'Sheet2', cardId: '181' }
 ];
 
 // Function to create the menu
@@ -29,6 +29,7 @@ menuItems.forEach(function(item, index) {
 // Function to handle loading data into sheets
 function runHardcodedSheetAndCard(cardId, sheetName) {
   try {
+    Logger.log(`Running with cardId: ${cardId}, sheetName: ${sheetName}`);
     // Use the passed parameters for sheetName and cardId
     MetabaseGoogleSheetConnector.fetchDataAndFillSheet(sheetName, cardId);
     
@@ -48,7 +49,7 @@ function showInputForm() {
   // Serve the HTML as a modal dialog
   var htmlOutput = HtmlService.createHtmlOutput(htmlContent)
       .setWidth(400)
-      .setHeight(300);
+      .setHeight(250);
   
   SpreadsheetApp.getUi().showModalDialog(htmlOutput, 'Enter Data');
 }
@@ -56,10 +57,18 @@ function showInputForm() {
 // Function to process the input from the HTML form
 function processInput(sheetName, cardId) {
   try {
+    Logger.log(`Processing input for sheet: ${sheetName}, cardId: ${cardId}`);
+    
+    // Check if sheetName and cardId are valid
+    if (!sheetName || !cardId) {
+      throw new Error("Sheet name or card ID is missing");
+    }
+    
     MetabaseGoogleSheetConnector.fetchDataAndFillSheet(sheetName, cardId);
     SpreadsheetApp.getUi().alert('Data successfully fetched and filled in the sheet: ' + sheetName);
   } catch (error) {
     SpreadsheetApp.getUi().alert('Error: ' + error.message);
+    Logger.log('Error: ' + error.message);
   }
 }
 
